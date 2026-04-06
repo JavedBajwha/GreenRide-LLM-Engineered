@@ -29,14 +29,20 @@ Defines the core business logic for bookings, including lifecycle, pricing, and 
 
 ## 2. Booking Lifecycle
 
+States match the canonical `BookingStatus` enum in `backend/prisma/schema.prisma`.
+
 1. draft
 2. quoted
 3. vehicle_selected
 4. confirmed
-5. assigned
-6. in_progress
-7. completed
-8. cancelled
+5. awaiting_dispatch
+6. assigned
+7. driver_en_route
+8. arrived
+9. in_progress
+10. completed
+11. cancelled
+12. exception
 
 ---
 

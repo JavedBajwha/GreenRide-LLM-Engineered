@@ -8,7 +8,7 @@ No alternative versions (v2, v3, next) are allowed.
 
 ## Root
 
-```
+```text
 backend/
   src/
     app.ts
@@ -27,6 +27,8 @@ backend/
         tenant.service.ts
     lib/
       prisma.ts
+  prisma/
+    schema.prisma
 ```
 
 ---
@@ -36,49 +38,49 @@ backend/
 ### 1. No Versioned Files
 
 Forbidden:
-- *.v2.ts
-- *.v3.ts
-- *.next.ts
 
----
+- `*.v2.ts`
+- `*.v3.ts`
+- `*.next.ts`
 
 ### 2. Single Ownership
 
 Each responsibility must exist in ONE place only:
 
 | Responsibility | File |
-|------|------|
+| --- | --- |
 | API entry | app.ts |
 | Routing root | routes/index.ts |
 | Booking controller | booking.controller.ts |
 | Booking logic | booking.service.ts |
 | Validation | booking.schema.ts |
 | Pricing logic | pricing.service.ts |
-
----
+| Tenant validation | tenant.service.ts |
+| Prisma client | lib/prisma.ts |
 
 ### 3. Module Isolation
 
-- booking module MUST NOT implement pricing logic
-- pricing module MUST NOT access HTTP layer
-
----
+- booking module must not implement pricing logic
+- pricing module must not access HTTP layer
+- tenant module must not implement booking logic
 
 ### 4. Strict Imports
 
 Allowed direction:
 
-```
+```text
 controller → service → prisma
 controller → schema
-service → pricing
+controller → tenant.service
+service → pricing.service
 ```
 
 Forbidden:
 
-```
+```text
 service → controller
 schema → service
+pricing.service → booking.service
 ```
 
 ---
@@ -87,6 +89,6 @@ schema → service
 
 If any file is created outside this structure:
 
-```
+```text
 STOP → FLAG → DO NOT CONTINUE
 ```

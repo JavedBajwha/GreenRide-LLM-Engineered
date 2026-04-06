@@ -121,16 +121,21 @@ Search → Quote → Vehicle Selection → Passenger Details → Extras → Paym
 
 ## 9. State Transitions
 
+States are canonical — they match the `BookingStatus` enum in `backend/prisma/schema.prisma`.
+Do not invent new states. All transitions must use the values below.
+
 - draft
 - quoted
 - vehicle_selected
-- details_added
-- extras_added
 - confirmed
-- paid
+- awaiting_dispatch
 - assigned
+- driver_en_route
+- arrived
 - in_progress
 - completed
+- cancelled
+- exception
 
 ---
 

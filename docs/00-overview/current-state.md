@@ -2,65 +2,61 @@
 
 ## Repository Status
 
-GreenRide now has an active implementation repository: `GreenRide-LLM-Engineered`.
+GreenRide is in **active implementation**.
 
-This repo is the working space for:
-- imported architecture and product documentation
-- implementation control documents
-- future backend, frontend, and infrastructure code
+The first backend slice (Search & Quote) is complete and pushed to `main`.
 
-The older clean documentation repo remains preserved as reference material.
+---
 
-## What Is Already Strong
+## What Is Complete
 
-The imported documentation is already strong in these areas:
+### Search & Quote backend slice
+
+- canonical backend file structure in place, all exploratory files removed
+- `POST /api/booking/quote` — working endpoint
+- Prisma schema covering all core entities (Tenant, User, Driver, Vehicle, Route, Quote, Booking, PricingRule, DispatchJob)
+- 11 decisions approved and logged (001–011a)
+- coding freeze lifted (`freeze-lift.md`)
+- zero TypeScript errors
+
+---
+
+## What Is Still Being Built
+
+In priority order:
+
+1. Auth — JWT, login, token middleware, role resolution
+2. Tenant onboarding API
+3. Booking confirmation (quote → booking)
+4. Driver flows
+5. Dispatch system
+6. Payments
+7. Notifications
+8. Frontend — customer app, admin/dispatch app, driver app
+9. Infrastructure
+
+---
+
+## Known Gaps Requiring Input Before Next Slice
+
+1. **UI mockup assets** — `docs/assets/ui/` folder referenced throughout docs but images not yet in repo
+2. **Frontend tech stack** — framework, CSS, state management not yet decided
+3. **RBAC document** — referenced by 7 docs but does not exist yet
+
+---
+
+## What Is Still Strong From Before
+
 - product scope and feature coverage
 - customer, driver, and dispatch application understanding
-- platform concepts such as multi-tenancy and tenant configuration
-- UI direction and screen mapping
+- platform concepts (multi-tenancy, tenant configuration)
+- UI direction and screen mapping (once assets are added)
 - high-level system relationships
 
-## What Is Still Being Upgraded
-
-The inherited documentation is not yet implementation-safe in the following areas:
-- data model depth
-- service contracts and ownership boundaries
-- repository structure enforcement
-- environment and dependency contracts
-- migration strategy
-- stop-and-flag behaviour for AI agents
-
-## Current Phase
-
-We are in **controlled implementation preparation**.
-
-That means:
-- architecture is already defined
-- implementation may begin only where contracts are explicit enough
-- missing or ambiguous details must be resolved before code generation
-- the first controlled slice remains **Search & Quote**
-
-## Immediate Priorities
-
-1. import and align core docs from the earlier clean repository
-2. strengthen implementation rules
-3. define repository structure and environment contract
-4. upgrade the data model into implementation-ready form
-5. standardise first-slice API contracts
+---
 
 ## Current Build Focus
 
-The first slice to prepare for implementation is:
-- customer Search & Quote
+Next slice to prepare: **Auth** (JWT login, middleware, role resolution).
 
-This slice must align across:
-- customer booking UI
-- quote request contract
-- pricing engine behaviour
-- booking service ownership
-- tenant-aware request handling
-
-## Summary
-
-GreenRide is no longer in pure documentation mode.
-It is moving into controlled execution, with documentation being upgraded from architectural guidance to implementation-safe guidance.
+Must be documented and contracted before coding begins.

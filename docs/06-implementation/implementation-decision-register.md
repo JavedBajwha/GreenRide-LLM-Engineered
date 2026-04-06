@@ -293,23 +293,29 @@ No cleanup, overwrite, deletion, or canonical file creation may begin until all 
 ## Current Decision Summary
 
 | ID | Topic | Status |
-|---|---|---|
-| 001 | Distance estimation ownership | proposed |
-| 002 | Quote persistence scope | proposed |
-| 003 | Canonical naming quote vs booking | proposed |
-| 004 | Preferred app source | proposed |
-| 005 | Preferred controller source | proposed |
-| 006 | Preferred booking service source | proposed |
-| 007 | Preferred pricing service source | proposed |
-| 008 | Cleanup gate condition | proposed |
+| --- | --- | --- |
+| 001 | Distance estimation ownership | approved |
+| 002 | Quote persistence scope | approved |
+| 003 | Canonical naming quote vs booking | approved |
+| 004 | Preferred app source | approved |
+| 005 | Preferred controller source | approved |
+| 006 | Preferred booking service source | approved |
+| 007 | Preferred pricing service source | approved |
+| 008 | Cleanup gate condition | approved |
+| 009 | Fallback vehicle category behaviour | approved |
+| 010 | Quote endpoint authentication | approved |
+| 011 | Remaining slice gaps (schema, pricing, contracts) | approved |
+| 011a | Pre-implementation plan amendments | approved |
+
+See `decision-approval-log.md` for full detail on each approved decision.
 
 ---
 
 ## Controlled AI Rule
 
-An LLM must not treat any `proposed` decision as implementation permission.
+All decisions in this register are approved. The freeze is lifted.
 
-Only `approved` decisions may influence cleanup or coding after the freeze is lifted.
+Coding may proceed slice by slice per `freeze-lift.md` and `llm-execution-rules.md`.
 
 ---
 

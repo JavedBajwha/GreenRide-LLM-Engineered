@@ -1,50 +1,80 @@
 # GreenRide Context (MASTER FILE)
 
 ## Project Overview
+
 GreenRide is a multi-tenant SaaS platform for taxi and private hire companies.
 It includes customer booking, dispatch operations, driver workflows, payments, realtime tracking, notifications, tenant-aware configuration, and platform-level governance.
 
 ## Current Repository Role
+
 This repository is the active **LLM-engineered working repo**.
-It contains imported architecture documents from the earlier clean docs repository and adds implementation control documents needed to reduce AI drift.
+It contains architecture documents, implementation control documents, and the live codebase.
 
 ## Current Phase
-We are in **controlled implementation preparation**.
 
-This means:
-- architecture docs exist and remain valuable
-- implementation is allowed only when guided by strict contracts
-- missing execution details must be added before major coding begins
-- Search & Quote remains the first controlled build slice
+We are in **active implementation**.
 
-## Known Gap We Are Fixing
-The inherited docs are strong at architecture level, but weak at deterministic implementation level.
-The main issues identified are:
-- data model is too skeletal for direct generation
-- service boundaries are described mostly in prose
-- file and folder structures are not locked tightly enough
-- environment and dependency contracts are incomplete
-- migration strategy is not explicit enough
-- AI agents do not yet have strong stop-and-flag rules
+The first backend slice — Search & Quote — is complete and live on `main`.
 
-## Active Upgrade Areas
-1. implementation rules hardening
-2. repo structure definition
-3. environment contract
-4. migration strategy
-5. data model expansion into implementation-ready schema
-6. per-slice execution guidance
+## What Is Built
+
+### Backend — Search & Quote slice (complete)
+
+- Express + TypeScript + Prisma backend scaffold
+- Full database schema covering all core entities
+- `POST /api/booking/quote` endpoint — fully operational
+- Canonical file structure enforced, all exploratory files removed
+- Zero TypeScript errors, passes type-check
+
+### Files in place
+
+```text
+backend/src/app.ts
+backend/src/main.ts
+backend/src/routes/index.ts
+backend/src/modules/booking/booking.controller.ts
+backend/src/modules/booking/booking.routes.ts
+backend/src/modules/booking/booking.schema.ts
+backend/src/modules/booking/booking.service.ts
+backend/src/modules/pricing/pricing.service.ts
+backend/src/modules/tenant/tenant.service.ts
+backend/src/lib/prisma.ts
+backend/prisma/schema.prisma
+```
+
+## What Is Not Yet Built
+
+- Tenant onboarding API
+- Authentication and JWT
+- RBAC enforcement middleware
+- Booking confirmation (quote → confirmed booking)
+- Driver app flows
+- Dispatch system
+- Payments
+- Notifications
+- Frontend (customer app, admin/dispatch app, driver app)
+- Infrastructure (Docker, deployment)
+
+## Build Order (Remaining)
+
+1. Auth — JWT login, token middleware, role resolution
+2. Tenant onboarding API — create and configure tenants
+3. Booking confirmation — quote selection → confirmed booking
+4. Driver flows — status, job acceptance, trip lifecycle
+5. Dispatch — assignment, manual and auto modes
+6. Payments — Stripe or equivalent integration
+7. Notifications — email, SMS
+8. Frontend — customer app, admin app, driver app
+9. Infrastructure — Docker, CI/CD, environments
 
 ## Working Preferences
-- step-by-step progress
+
+- step-by-step progress, one slice at a time
 - no silent redesigns
 - no assumption-heavy coding
-- one controlled slice at a time
-- full copy-paste-ready outputs when needed
-- preserve terminology already established in the docs
+- full decisions documented before coding
+- preserve all terminology established in the docs
 
 ## Important Rule
-If something necessary for implementation is missing, the system must stop and flag it rather than guess.
 
-## Immediate Next Focus
-Prepare the repo so an AI coding agent can safely implement Search & Quote without drifting away from the intended architecture.
+If something necessary for implementation is missing, stop and flag it rather than guess.

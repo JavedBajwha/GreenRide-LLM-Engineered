@@ -1,10 +1,15 @@
-# Data Model (Implementation Ready - v1)
+# Data Model
 
-## Purpose
+## Source of Truth
 
-Defines the database structure for GreenRide in a way that is safe for implementation.
+The canonical data model is defined in:
 
-This version expands the earlier conceptual model into something closer to a real schema.
+```text
+backend/prisma/schema.prisma
+```
+
+That file is the implementation-ready source of truth. Any discrepancy between this
+document and the Prisma schema must be resolved in favour of the Prisma schema.
 
 ---
 
@@ -12,116 +17,54 @@ This version expands the earlier conceptual model into something closer to a rea
 
 - single database
 - shared tables
-- strict tenant isolation via `tenant_id`
+- strict tenant isolation via `tenantId` on every model except `Tenant` itself
+- all queries must filter by `tenantId` — no exceptions
 
 ---
 
-## Core Entities
+## Core Models
 
-### Tenant
-- id (uuid)
-- name (string)
-- slug (string, unique)
-- created_at (timestamp)
-- updated_at (timestamp)
-
----
-
-### User
-- id (uuid)
-- tenant_id (uuid)
-- role (enum)
-- name (string)
-- email (string, unique per tenant)
-- created_at
-- updated_at
+| Model | Purpose |
+| --- | --- |
+| Tenant | A taxi or private hire business using GreenRide |
+| TenantConfig | Per-tenant feature and behaviour configuration |
+| User | Platform and tenant users (all roles) |
+| Driver | Driver profile linked to a User |
+| Vehicle | Fleet vehicle belonging to a tenant |
+| Route | Named fixed routes with optional fixed pricing |
+| Quote | A generated price quote for a journey |
+| Booking | A confirmed customer booking |
+| PricingRule | Tenant pricing configuration (category-aware) |
+| DispatchJob | A dispatch assignment linking a Booking to a Driver |
 
 ---
 
-### Booking
-- id (uuid)
-- tenant_id (uuid)
-- customer_id (uuid)
-- pickup_address (string)
-- dropoff_address (string)
-- pickup_datetime (timestamp)
-- status (enum)
-- total_price (decimal)
-- created_at
-- updated_at
+## Key Enums
 
----
-
-### Driver
-- id (uuid)
-- tenant_id (uuid)
-- name (string)
-- status (enum)
-- created_at
-- updated_at
-
----
-
-### Vehicle
-- id (uuid)
-- tenant_id (uuid)
-- type (string)
-- capacity (int)
-- created_at
-- updated_at
-
----
-
-## Relationships
-
-- Tenant → Users (1:N)
-- Tenant → Bookings (1:N)
-- Tenant → Drivers (1:N)
-- Tenant → Vehicles (1:N)
-
-- Booking → Driver (optional)
-- Booking → Vehicle (optional)
-
----
-
-## Enums (Baseline)
-
-### BookingStatus
-- draft
-- quoted
-- confirmed
-- assigned
-- in_progress
-- completed
-- cancelled
-
-### UserRole
-- super_admin
-- tenant_admin
-- dispatcher
-- driver
-- customer
+| Enum | Values |
+| --- | --- |
+| TenantStatus | created, setup_in_progress, ready_for_testing, live, suspended |
+| UserRole | super_admin, tenant_owner, tenant_admin, dispatcher, office_staff, driver, customer |
+| BookingStatus | draft, quoted, vehicle_selected, confirmed, awaiting_dispatch, assigned, driver_en_route, arrived, in_progress, completed, cancelled, exception |
+| VehicleCategory | saloon, estate, mpv, executive, minibus, accessible |
+| TripType | one_way, return_trip, hourly, multi_stop |
+| PricingModel | fixed_route, distance_based, time_based, combined, hourly |
+| DispatchMode | manual, automatic, hybrid |
+| DispatchJobStatus | awaiting_dispatch, offered_to_driver, assigned, driver_accepted, driver_rejected, timed_out, cancelled, completed, exception |
 
 ---
 
 ## Rules
 
-- every table MUST include tenant_id (except Tenant)
+- every table must include `tenantId` (except `Tenant`)
 - no cross-tenant queries allowed
-- indexes required on tenant_id
-- all relations must include tenant constraint
+- indexes required on `tenantId` for all tenant-scoped models
+- if a required field is missing for a feature — stop and add it to the schema first, do not invent fields in code
 
 ---
 
-## Important Implementation Rule
+## Important Rule
 
-If a required field is missing for a feature:
-→ STOP and define it here first
+Do not use this document as implementation reference.
 
-Do NOT invent fields in code.
-
----
-
-## Next Upgrade
-
-This model will evolve into a full Prisma schema in the next step.
+Read `backend/prisma/schema.prisma` directly for field names, types, and relations.
