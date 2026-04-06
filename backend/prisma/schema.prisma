@@ -1,0 +1,315 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id                String          @id @default(uuid())
+  slug              String          @unique
+  name              String
+  displayName       String?
+  status            TenantStatus    @default(created)
+  supportEmail      String?
+  supportPhone      String?
+  primaryDomain     String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  config            TenantConfig?
+  users             User[]
+  drivers           Driver[]
+  vehicles          Vehicle[]
+  bookings          Booking[]
+  quotes            Quote[]
+  routes            Route[]
+  pricingRules      PricingRule[]
+  dispatchJobs      DispatchJob[]
+}
+
+model TenantConfig {
+  id                     String               @id @default(uuid())
+  tenantId               String               @unique
+  brandingLogoUrl        String?
+  primaryColor           String?
+  secondaryColor         String?
+  accentColor            String?
+  dispatchMode           DispatchMode         @default(hybrid)
+  guestBookingEnabled    Boolean              @default(true)
+  accountBookingEnabled  Boolean              @default(true)
+  returnTripsEnabled     Boolean              @default(true)
+  multiStopEnabled       Boolean              @default(false)
+  hourlyHireEnabled      Boolean              @default(false)
+  cashPaymentsEnabled    Boolean              @default(false)
+  cardPaymentsEnabled    Boolean              @default(true)
+  corporateBillingEnabled Boolean             @default(false)
+  smsEnabled             Boolean              @default(false)
+  emailEnabled           Boolean              @default(true)
+  whatsappEnabled        Boolean              @default(false)
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  tenant                 Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id              String      @id @default(uuid())
+  tenantId        String
+  email           String
+  firstName       String
+  lastName        String?
+  phone           String?
+  passwordHash    String?
+  role            UserRole
+  status          UserStatus  @default(active)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  tenant          Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customerBookings Booking[]  @relation("CustomerBookings")
+  @@unique([tenantId, email])
+  @@index([tenantId, role])
+}
+
+model Driver {
+  id                String         @id @default(uuid())
+  tenantId          String
+  userId            String?        @unique
+  firstName         String
+  lastName          String?
+  phone             String?
+  status            DriverStatus   @default(offline)
+  latitude          Decimal?       @db.Decimal(9, 6)
+  longitude         Decimal?       @db.Decimal(9, 6)
+  locationUpdatedAt DateTime?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  tenant            Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  vehicle           Vehicle?
+  dispatchJobs      DispatchJob[]
+  bookings          Booking[]
+  @@index([tenantId, status])
+}
+
+model Vehicle {
+  id                String       @id @default(uuid())
+  tenantId          String
+  driverId          String?      @unique
+  label             String
+  category          VehicleCategory
+  registration      String?
+  passengerCapacity Int
+  luggageCapacity   Int?
+  isActive          Boolean      @default(true)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  tenant            Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  driver            Driver?      @relation(fields: [driverId], references: [id])
+  bookings          Booking[]
+  pricingRules      PricingRule[]
+  @@index([tenantId, category])
+}
+
+model Route {
+  id               String       @id @default(uuid())
+  tenantId         String
+  name             String
+  pickupLabel      String
+  dropoffLabel     String
+  fixedPrice       Decimal?     @db.Decimal(10, 2)
+  distanceMiles    Decimal?     @db.Decimal(10, 2)
+  durationMinutes  Int?
+  isActive         Boolean      @default(true)
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  tenant           Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  quotes           Quote[]
+  bookings         Booking[]
+  @@index([tenantId, isActive])
+}
+
+model Quote {
+  id                 String          @id @default(uuid())
+  tenantId           String
+  routeId            String?
+  pickupLocation     String
+  dropoffLocation    String
+  pickupAt           DateTime
+  tripType           TripType        @default(one_way)
+  passengerCount     Int             @default(1)
+  luggageCount       Int             @default(0)
+  vehicleCategory    VehicleCategory
+  estimatedPrice     Decimal         @db.Decimal(10, 2)
+  estimatedDuration  Int?
+  expiresAt          DateTime?
+  createdAt          DateTime        @default(now())
+  tenant             Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  route              Route?          @relation(fields: [routeId], references: [id])
+  booking            Booking?
+  @@index([tenantId, pickupAt])
+}
+
+model Booking {
+  id                String           @id @default(uuid())
+  tenantId          String
+  customerId        String?
+  driverId          String?
+  vehicleId         String?
+  routeId           String?
+  quoteId           String?          @unique
+  reference         String           @unique
+  status            BookingStatus    @default(draft)
+  tripType          TripType         @default(one_way)
+  pickupLocation    String
+  dropoffLocation   String
+  pickupAt          DateTime
+  passengerCount    Int              @default(1)
+  luggageCount      Int              @default(0)
+  customerName      String?
+  customerEmail     String?
+  customerPhone     String?
+  notes             String?
+  totalPrice        Decimal          @db.Decimal(10, 2)
+  currency          String           @default("GBP")
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  tenant            Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  customer          User?            @relation("CustomerBookings", fields: [customerId], references: [id])
+  driver            Driver?          @relation(fields: [driverId], references: [id])
+  vehicle           Vehicle?         @relation(fields: [vehicleId], references: [id])
+  route             Route?           @relation(fields: [routeId], references: [id])
+  quote             Quote?           @relation(fields: [quoteId], references: [id])
+  dispatchJobs      DispatchJob[]
+  @@index([tenantId, status])
+  @@index([tenantId, pickupAt])
+  @@index([tenantId, customerId])
+}
+
+model PricingRule {
+  id               String          @id @default(uuid())
+  tenantId         String
+  vehicleId        String?
+  name             String
+  pricingModel     PricingModel
+  baseFare         Decimal?        @db.Decimal(10, 2)
+  pricePerMile     Decimal?        @db.Decimal(10, 2)
+  pricePerMinute   Decimal?        @db.Decimal(10, 2)
+  minimumFare      Decimal?        @db.Decimal(10, 2)
+  isActive         Boolean         @default(true)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  tenant           Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  vehicle          Vehicle?        @relation(fields: [vehicleId], references: [id])
+  @@index([tenantId, pricingModel])
+}
+
+model DispatchJob {
+  id              String           @id @default(uuid())
+  tenantId        String
+  bookingId       String
+  driverId        String?
+  status          DispatchJobStatus @default(awaiting_dispatch)
+  assignedAt      DateTime?
+  acceptedAt      DateTime?
+  completedAt     DateTime?
+  notes           String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  tenant          Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  booking         Booking          @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  driver          Driver?          @relation(fields: [driverId], references: [id])
+  @@index([tenantId, status])
+  @@index([tenantId, bookingId])
+}
+
+enum TenantStatus {
+  created
+  setup_in_progress
+  ready_for_testing
+  live
+  suspended
+}
+
+enum UserRole {
+  super_admin
+  tenant_owner
+  tenant_admin
+  dispatcher
+  office_staff
+  driver
+  customer
+}
+
+enum UserStatus {
+  active
+  invited
+  suspended
+}
+
+enum DriverStatus {
+  offline
+  available
+  offered_job
+  assigned
+  en_route
+  arrived
+  on_trip
+  paused
+}
+
+enum VehicleCategory {
+  saloon
+  estate
+  mpv
+  executive
+  minibus
+  accessible
+}
+
+enum TripType {
+  one_way
+  return_trip
+  hourly
+  multi_stop
+}
+
+enum BookingStatus {
+  draft
+  quoted
+  vehicle_selected
+  confirmed
+  awaiting_dispatch
+  assigned
+  driver_en_route
+  arrived
+  in_progress
+  completed
+  cancelled
+  exception
+}
+
+enum PricingModel {
+  fixed_route
+  distance_based
+  time_based
+  combined
+  hourly
+}
+
+enum DispatchMode {
+  manual
+  automatic
+  hybrid
+}
+
+enum DispatchJobStatus {
+  awaiting_dispatch
+  offered_to_driver
+  assigned
+  driver_accepted
+  driver_rejected
+  timed_out
+  cancelled
+  completed
+  exception
+}
