@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createQuote } from './quote.controller.js'
+import { createQuote } from './booking.controller.js'
 
 const router = Router()
 

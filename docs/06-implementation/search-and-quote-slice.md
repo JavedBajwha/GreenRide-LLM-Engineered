@@ -17,6 +17,7 @@ Build the first working vertical slice of GreenRide.
 ## Frontend
 
 Components:
+
 - SearchQuoteForm
 - QuoteResultCard
 - SearchQuotePage
@@ -26,7 +27,10 @@ Components:
 ## Backend
 
 Endpoint:
-POST /api/v1/quotes/search
+POST /api/booking/quote
+
+> **Note:** The earlier path `POST /api/v1/quotes/search` is retired.
+> Canonical path is defined in `search-and-quote-canonical-spec.md`.
 
 ---
 
@@ -47,6 +51,7 @@ Form → API → response → map → UI
 ## Stop Conditions
 
 If missing:
+
 - API field
 - response field
 - pricing logic

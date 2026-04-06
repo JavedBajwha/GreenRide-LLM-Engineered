@@ -129,23 +129,25 @@ model Route {
 }
 
 model Quote {
-  id                 String          @id @default(uuid())
-  tenantId           String
-  routeId            String?
-  pickupLocation     String
-  dropoffLocation    String
-  pickupAt           DateTime
-  tripType           TripType        @default(one_way)
-  passengerCount     Int             @default(1)
-  luggageCount       Int             @default(0)
-  vehicleCategory    VehicleCategory
-  estimatedPrice     Decimal         @db.Decimal(10, 2)
-  estimatedDuration  Int?
-  expiresAt          DateTime?
-  createdAt          DateTime        @default(now())
-  tenant             Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  route              Route?          @relation(fields: [routeId], references: [id])
-  booking            Booking?
+  id                       String          @id @default(uuid())
+  tenantId                 String
+  routeId                  String?
+  pickupLocation           String
+  dropoffLocation          String
+  pickupAt                 DateTime
+  tripType                 TripType        @default(one_way)
+  passengerCount           Int             @default(1)
+  luggageCount             Int             @default(0)
+  vehicleCategory          VehicleCategory
+  estimatedPrice           Decimal         @db.Decimal(10, 2)
+  estimatedDistanceMiles   Decimal?        @db.Decimal(10, 2)
+  estimatedDurationMinutes Int?
+  pricingSource            String?
+  expiresAt                DateTime?
+  createdAt                DateTime        @default(now())
+  tenant                   Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  route                    Route?          @relation(fields: [routeId], references: [id])
+  booking                  Booking?
   @@index([tenantId, pickupAt])
 }
 
@@ -186,21 +188,23 @@ model Booking {
 }
 
 model PricingRule {
-  id               String          @id @default(uuid())
+  id               String           @id @default(uuid())
   tenantId         String
   vehicleId        String?
+  vehicleCategory  VehicleCategory?
   name             String
   pricingModel     PricingModel
-  baseFare         Decimal?        @db.Decimal(10, 2)
-  pricePerMile     Decimal?        @db.Decimal(10, 2)
-  pricePerMinute   Decimal?        @db.Decimal(10, 2)
-  minimumFare      Decimal?        @db.Decimal(10, 2)
-  isActive         Boolean         @default(true)
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  tenant           Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  vehicle          Vehicle?        @relation(fields: [vehicleId], references: [id])
+  baseFare         Decimal?         @db.Decimal(10, 2)
+  pricePerMile     Decimal?         @db.Decimal(10, 2)
+  pricePerMinute   Decimal?         @db.Decimal(10, 2)
+  minimumFare      Decimal?         @db.Decimal(10, 2)
+  isActive         Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  tenant           Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  vehicle          Vehicle?         @relation(fields: [vehicleId], references: [id])
   @@index([tenantId, pricingModel])
+  @@index([tenantId, vehicleCategory])
 }
 
 model DispatchJob {

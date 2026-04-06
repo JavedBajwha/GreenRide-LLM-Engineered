@@ -24,6 +24,9 @@ Defines how services communicate in GreenRide.
 
 ## Example
 
-POST /api/v1/quotes/search
+POST /api/booking/quote
 
 Used for Search & Quote flow.
+
+> **Note:** The earlier path `POST /api/v1/quotes/search` is retired.
+> Canonical path is defined in `docs/06-implementation/search-and-quote-canonical-spec.md`.
