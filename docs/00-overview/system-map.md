@@ -118,9 +118,9 @@ If a UI screen exists in:
 
 Then:
 
-- that mockup MUST be used as visual reference
-- AI must NOT invent layout
-- UI must align with mapped assets
+- where a corresponding named asset exists in `docs/assets/ui/`, that asset MUST be used as the preferred visual reference
+- where no corresponding named asset exists yet, AI must follow the written UI contracts and treat the resulting visual output as provisional rather than exact-match final
+- AI must NOT invent layout in ways that contradict the mapped screen family or written UI contracts
 
 ---
 
@@ -200,22 +200,24 @@ Start here if building GreenRide:
 7. [[multi-tenancy]]
 8. [[rbac]]
 9. [[tenant-configuration]]
+10. [[platform-services]]
 
 ---
 
 ### Step 4 — Architecture
 
-10. [[api-architecture]]
-11. [[data-model]]
-12. [[realtime-system]]
+11. [[api-architecture]]
+12. [[data-model]]
+13. [[realtime-system]]
 
 ---
 
 ### Step 5 — Frontend (MANDATORY FLOW)
 
-13. [[frontend-architecture]]
-14. [[component-architecture]]
-15. [[ui-screen-map]]
+14. [[frontend-architecture]]
+15. [[component-architecture]]
+16. [[ui-screen-map]]
+17. [[frontend-tech-stack]]
 
 Then:
 
@@ -229,6 +231,8 @@ Frontend must NOT start before:
 
 - system docs are understood
 - UI screen map is reviewed
+- frontend tech stack is approved
+- required UI assets exist when exact visual matching is required
 
 ---
 

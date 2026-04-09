@@ -24,6 +24,8 @@ This repo is now the main working space.
 
 ## Start Here
 
+For AI agents that support repo guidance files, read `AGENTS.md` first.
+
 Read these first, in order:
 
 1. `docs/00-overview/README.md`
@@ -33,7 +35,9 @@ Read these first, in order:
 5. `docs/00-overview/implementation-rules.md`
 6. `docs/00-overview/ai-stop-rules.md`
 7. `docs/06-implementation/README.md`
-8. `context.md`
+8. `docs/06-implementation/ai-build-readiness.md`
+9. `docs/06-implementation/environment-contract.md`
+10. `context.md`
 
 ## Repository Structure
 
@@ -52,8 +56,8 @@ Read these first, in order:
 
 ### Code Areas
 - `backend/` → API, services, data access, background jobs
-- `frontend/` → user-facing web apps and shared frontend packages
-- `infrastructure/` → Docker, local environments, deployment scaffolding
+- `frontend/` → approved target for future user-facing apps and shared frontend packages
+- `infrastructure/` → future home for Docker and deployment scaffolding when that work starts
 
 ## Current Goal
 
@@ -86,3 +90,4 @@ AI agents must not silently invent:
 
 GreenRide-LLM-Engineered is the active repo for controlled AI-assisted implementation.
 It keeps the earlier design work, adds missing execution constraints, and becomes the main source of truth for future build work.
+Frontend is now documentation-ready for scaffolding, while deployment automation remains future work.

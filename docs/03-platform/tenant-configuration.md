@@ -171,6 +171,10 @@ Examples:
 
 Not every tenant will use every service mode.
 
+If the `School Run` add-on is commercially enabled, school transport may appear
+here as a supported service family, but add-on enablement alone does not define
+School Run authority, recurring workflow, or billing truth.
+
 ---
 
 ## 5.5 Vehicle and Fleet Configuration
@@ -194,6 +198,9 @@ The product may share category logic, but tenant availability remains configurab
 ## 5.6 Pricing Configuration
 
 Pricing configuration determines how quotes and fares are calculated or presented for a tenant.
+
+The canonical product-side configuration boundary for this category now lives in:
+- `docs/01-product/price-structure-configuration.md`
 
 Examples:
 
@@ -303,8 +310,39 @@ Examples:
 - advanced reporting enabled
 - advanced audit logging enabled
 - premium dispatch automation enabled
+- School Run add-on enabled
+- Parcel / Courier / Logistics add-on enabled
 
 This allows plan-based and capability-based product control.
+
+Add-on enablement exposes only the documented module scope. It does not by
+itself define workflow truth, proof rules, or role authority inside an add-on.
+
+---
+
+## 5.12 Add-On Specific Configuration
+
+This category covers optional modules that need deeper tenant-specific behavior
+once they are commercially enabled.
+
+Examples:
+
+- School Run authority mode
+- School Run roster linkage or approved-contact rules
+- School Run special transport-note defaults
+- Parcel / Courier / Logistics service or handling levels
+- parcel-class and handling restrictions
+- operational defaults that apply only inside the approved add-on scope
+
+Rules:
+
+- add-on-specific configuration exists only inside a commercially enabled
+  module
+- add-on-specific configuration must not replace RBAC
+- add-on-specific configuration must not silently invent workflow truth that
+  belongs in dedicated add-on contracts
+- platform-defined security or proof boundaries remain authoritative even when
+  tenant-level add-on settings are allowed
 
 ---
 

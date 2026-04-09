@@ -24,7 +24,7 @@ It must prioritise clarity, speed, and real-time accuracy.
 
 ## 2. Primary Driver Journey
 
-Online → Job Offered → Accepted → En Route to Pickup → Arrived → Passenger Onboard / Trip Started → In Progress → Completed
+Available → Job Offered → Assigned → Driver En Route → Arrived → In Progress → Available
 
 Secondary flows:
 - rejected job
@@ -66,7 +66,7 @@ Secondary flows:
 - navigation launch action
 
 ### 5. Navigation / Route Support Screen
-- live route guidance handoff or embedded map support
+- navigation handoff support first, with embedded map support only if later explicitly approved
 - ETA awareness
 - reroute support where relevant
 
@@ -142,11 +142,11 @@ Driver app state should be consistent with operational dispatch.
 Typical states include:
 - offline
 - available
-- offered_job
+- job_offered
 - assigned
-- en_route
+- driver_en_route
 - arrived
-- on_trip
+- in_progress
 - paused
 
 These states must not become disconnected from backend truth.
@@ -199,6 +199,7 @@ Therefore it should aim for:
 - retry-aware actions
 - clear feedback when connectivity is weak
 - local UI protection against duplicate taps / repeated action spam
+- visible distinction between last-known local context and confirmed live platform acknowledgement when sync is uncertain
 
 Exact offline strategy can be expanded later, but operational resilience must be part of the design.
 

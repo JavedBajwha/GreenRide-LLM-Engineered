@@ -32,6 +32,18 @@ If any required detail is missing, the LLM must stop and flag it.
 
 ---
 
+## Repository-Wide Read Order
+
+Before any implementation or readiness claim, the LLM must read:
+
+1. `AGENTS.md`
+2. `docs/00-overview/current-state.md`
+3. `docs/06-implementation/ai-build-readiness.md`
+4. `docs/06-implementation/environment-contract.md`
+5. `docs/06-implementation/repo-structure.md`
+
+---
+
 ## Execution Priority Order
 
 When an LLM works on GreenRide, it must follow this priority order:
@@ -75,26 +87,34 @@ It must not invent missing structure.
 ### Rule 5: No new file creation outside canonical structure
 If a file is not listed in the final structure docs, the LLM must not create it.
 
-### Rule 6: No implementation while freeze is active
+### Rule 6: No blind frontend or infrastructure scaffolding
+The LLM must not scaffold frontend code until `docs/05-frontend/frontend-tech-stack.md` is approved.
+If exact visual matching is required for a named screen, the corresponding UI asset must exist or the output must be treated as provisional.
+The LLM must not scaffold infrastructure or deployment automation before that need is explicitly documented.
+
+### Rule 7: No implementation while freeze is active
 If `coding-freeze.md` indicates freeze is active, the LLM must not write code.
 Only specification, cleanup planning, and structural clarification are allowed.
 
-### Rule 7: No route drift
+### Rule 8: No route drift
 The LLM must not introduce alternate paths when the canonical route is already defined.
 
-### Rule 8: No response shape drift
+### Rule 9: No response shape drift
 The LLM must not change top-level response format unless the canonical spec is updated first.
 
-### Rule 9: No architectural leakage
+### Rule 10: No architectural leakage
 The LLM must preserve separation:
 - controller = HTTP boundary
 - service = business orchestration
 - schema = validation only
 - pricing service = pricing logic only
 
-### Rule 10: No silent cleanup
+### Rule 11: No silent cleanup
 The LLM must not delete, rename, or overwrite files silently.
 All cleanup must be explicit and mapped.
+
+### Rule 12: No stale health claims
+The LLM must not claim the repo is clean, passing, or ready without rerunning the relevant validation against the current working tree.
 
 ---
 
@@ -113,6 +133,10 @@ The LLM must stop immediately if:
 9. persistence rules are unclear
 10. tenant fallback rules are unclear
 11. an action would overwrite existing code without explicit cleanup approval
+12. the approved frontend stack or scaffold contract is contradicted, or the target frontend work would require inventing unresolved stack/runtime choices
+13. exact visual matching is required for a screen whose UI asset is missing
+14. infrastructure or deployment automation is required but its shape is still undefined
+15. build health has not been re-validated after workspace changes
 
 When stopping, the LLM must explain:
 - what is blocked

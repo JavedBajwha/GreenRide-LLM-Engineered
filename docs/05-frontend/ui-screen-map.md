@@ -44,6 +44,8 @@ Used for:
 
 ## Rule
 
-AI must not invent UI.
+AI must not invent unsupported product flows or arbitrary screens.
 
-Must follow these assets.
+When an asset exists, follow it.
+When an asset is missing, use the screen map, design system, and related feature docs,
+and mark the visual implementation as provisional.

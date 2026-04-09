@@ -2,15 +2,17 @@
 
 ## Status
 
-ASSETS REQUIRED — images not yet uploaded.
+ASSETS AVAILABLE — the named baseline mockup images are now uploaded.
+
+Exact visual matching for the named screens should now use these files as the preferred reference.
+Screens without a named mockup should still be treated as provisional and governed by the written UI contracts.
 
 ---
 
 ## Expected Files
 
-The following mockup images must be placed in this folder before any frontend
-implementation begins. They are referenced throughout the docs and the system-map
-requires AI agents to follow them exactly.
+The following mockup images should be placed in this folder for exact visual reference.
+They are referenced throughout the docs and should be used whenever they exist.
 
 | Filename | Used for |
 | --- | --- |
@@ -24,7 +26,7 @@ requires AI agents to follow them exactly.
 
 ## Rule
 
-An AI agent must not invent or assume any screen layout until the corresponding
-mockup image exists in this folder.
+An AI agent must use these assets when they exist.
 
-If a mockup is missing, the agent must stop and request it before building that screen.
+If a mockup is missing, the agent may still scaffold or implement the screen from the
+written docs, but it must treat the visual output as provisional rather than final.

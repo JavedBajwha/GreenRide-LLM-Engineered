@@ -14,7 +14,7 @@ It contains architecture documents, implementation control documents, and the li
 
 We are in **active implementation**.
 
-The first backend slice — Search & Quote — is complete and live on `main`.
+The first backend slice — Search & Quote — is complete in repository scope and remains the canonical implemented slice.
 
 ## What Is Built
 
@@ -22,9 +22,9 @@ The first backend slice — Search & Quote — is complete and live on `main`.
 
 - Express + TypeScript + Prisma backend scaffold
 - Full database schema covering all core entities
-- `POST /api/booking/quote` endpoint — fully operational
+- `POST /api/booking/quote` endpoint implemented as the first canonical backend endpoint
 - Canonical file structure enforced, all exploratory files removed
-- Zero TypeScript errors, passes type-check
+- Build and type-check claims must always be re-validated against the current working tree before further coding
 
 ### Files in place
 
@@ -54,6 +54,14 @@ backend/prisma/schema.prisma
 - Notifications
 - Frontend (customer app, admin/dispatch app, driver app)
 - Infrastructure (Docker, deployment)
+
+## Current Readiness Notes
+
+- documentation and repository guidance are now aligned for AI-assisted work
+- frontend scaffolding can proceed from the approved stack and written UI contracts
+- screens without a named UI mockup asset still cannot claim pixel-accurate visual matching
+- infrastructure automation remains future work, but ordinary application development no longer depends on Docker or deployment scaffolding
+- any AI agent must validate the current workspace before claiming the repo is clean or healthy
 
 ## Build Order (Remaining)
 
